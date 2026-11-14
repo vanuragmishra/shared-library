@@ -1,0 +1,45 @@
+pipeline {
+    agent {
+        label 'my-linux-agent'
+        }
+
+    stages {
+        stage('install mvn') {
+                steps {
+                    sh "sudo apt update && sudo apt install maven -y"
+                    }
+            }
+        
+         stage('Install git') {
+            steps {
+                sh 'sudo apt update && sudo apt install -y git'
+            }
+        }
+        stage('clone') {
+            steps {
+                git 'https://github.com/vanuragmishra/skillfy.git'
+            }
+        }
+        
+        stage('test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+         stage('MV artifact') {
+            steps {
+                sh 'cp target/*.war /tmp/'
+            }
+        }
+    }
+}
